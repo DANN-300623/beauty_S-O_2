@@ -19,25 +19,29 @@ if('IntersectionObserver' in window){
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
 els.forEach(e=>io.observe(e));
 }else{els.forEach(e=>e.classList.add('in'))}
-const hero=document.querySelector('.hero');
-const scene=document.getElementById('scene');
-if(hero&&scene&&fine&&!reduce){
-hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;scene.style.setProperty('--ry',(x*22).toFixed(2)+'deg');scene.style.setProperty('--rx',(-y*14).toFixed(2)+'deg')});
-hero.addEventListener('pointerleave',()=>{scene.style.setProperty('--ry','0deg');scene.style.setProperty('--rx','0deg')});
+const hero=document.getElementById('hero');
+const stage=document.getElementById('stage');
+if(hero&&stage){
+const frames=[];
+frames[3]=stage.querySelector('.fr');
+let cur=3;
+function show(i){i=Math.max(0,Math.min(6,Math.round(i)));if(i===cur||!frames[i]||!frames[i].complete)return;frames[cur].classList.remove('on');frames[i].classList.add('on');cur=i}
+function loadAll(){for(let i=0;i<7;i++){if(frames[i])continue;const im=new Image();im.className='fr';im.alt='';im.width=760;im.height=1502;im.decoding='async';im.src='img/lala'+i+'.webp';stage.appendChild(im);frames[i]=im}}
+window.addEventListener('load',()=>{setTimeout(loadAll,fine?500:2200)});
+if(!reduce){
+if(fine){hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();show(((e.clientX-r.left)/r.width)*6)});hero.addEventListener('pointerleave',()=>show(3))}
+else{let t=false;window.addEventListener('scroll',()=>{if(t)return;t=true;requestAnimationFrame(()=>{t=false;const h=hero.offsetHeight||1;const p=Math.min(1,Math.max(0,window.scrollY/h));show(1+p*4)})},{passive:true})}
+let tk=false;window.addEventListener('scroll',()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{tk=false;const y=window.scrollY;if(y<window.innerHeight*1.2)stage.style.transform='translate3d(0,'+(y*0.08).toFixed(1)+'px,0)'})},{passive:true});
 }
-if(scene&&!reduce){
-let tick=false;
-const onScroll=()=>{if(tick)return;tick=true;requestAnimationFrame(()=>{tick=false;const y=window.scrollY;if(y<window.innerHeight*1.2){scene.style.transform='translate3d(0,'+(y*0.12).toFixed(1)+'px,0) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))'}})};
-window.addEventListener('scroll',onScroll,{passive:true});
 }
 if(fine&&!reduce){
 document.querySelectorAll('.card').forEach(c=>{
-c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width;const y=(e.clientY-r.top)/r.height;c.style.setProperty('--cry',((x-.5)*14).toFixed(2)+'deg');c.style.setProperty('--crx',((.5-y)*12).toFixed(2)+'deg');c.style.setProperty('--gx',(x*100).toFixed(0)+'%');c.style.setProperty('--gy',(y*100).toFixed(0)+'%')});
+c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width;const y=(e.clientY-r.top)/r.height;c.style.setProperty('--cry',((x-.5)*9).toFixed(2)+'deg');c.style.setProperty('--crx',((.5-y)*7).toFixed(2)+'deg');c.style.setProperty('--gx',(x*100).toFixed(0)+'%');c.style.setProperty('--gy',(y*100).toFixed(0)+'%')});
 c.addEventListener('pointerleave',()=>{c.style.setProperty('--cry','0deg');c.style.setProperty('--crx','0deg')});
 });
 const coll=document.querySelector('.coll');
 if(coll){
-coll.addEventListener('pointermove',e=>{const r=coll.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;coll.style.setProperty('--ry2',(x*16).toFixed(2)+'deg');coll.style.setProperty('--rx2',(-y*12).toFixed(2)+'deg')});
+coll.addEventListener('pointermove',e=>{const r=coll.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;coll.style.setProperty('--ry2',(x*10).toFixed(2)+'deg');coll.style.setProperty('--rx2',(-y*8).toFixed(2)+'deg')});
 coll.addEventListener('pointerleave',()=>{coll.style.setProperty('--ry2','0deg');coll.style.setProperty('--rx2','0deg')});
 }
 }
