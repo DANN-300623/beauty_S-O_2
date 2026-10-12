@@ -26,12 +26,15 @@ const frames=[];
 frames[3]=stage.querySelector('.fr');
 let cur=3;
 function show(i){i=Math.max(0,Math.min(6,Math.round(i)));if(i===cur||!frames[i]||!frames[i].complete)return;frames[cur].classList.remove('on');frames[i].classList.add('on');cur=i}
-function loadAll(){for(let i=0;i<7;i++){if(frames[i])continue;const im=new Image();im.className='fr';im.alt='';im.width=760;im.height=1502;im.decoding='async';im.src='img/lala'+i+'.webp';stage.appendChild(im);frames[i]=im}}
+function loadAll(){for(let i=0;i<7;i++){if(frames[i])continue;const im=new Image();im.className='fr';im.alt='';im.width=620;im.height=1200;im.decoding='async';im.src='img/lala'+i+'.webp';stage.appendChild(im);frames[i]=im}}
 window.addEventListener('load',()=>{setTimeout(loadAll,fine?500:2200)});
 if(!reduce){
 if(fine){hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();show(((e.clientX-r.left)/r.width)*6)});hero.addEventListener('pointerleave',()=>show(3))}
 else{let t=false;window.addEventListener('scroll',()=>{if(t)return;t=true;requestAnimationFrame(()=>{t=false;const h=hero.offsetHeight||1;const p=Math.min(1,Math.max(0,window.scrollY/h));show(1+p*4)})},{passive:true})}
-let tk=false;window.addEventListener('scroll',()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{tk=false;const y=window.scrollY;if(y<window.innerHeight*1.2)stage.style.transform='translate3d(0,'+(y*0.08).toFixed(1)+'px,0)'})},{passive:true});
+let py=0,rx=0,ry=0,tk=false;
+function ap(){stage.style.transform='perspective(1100px) translate3d(0,'+py.toFixed(1)+'px,0) rotateY('+ry.toFixed(2)+'deg) rotateX('+rx.toFixed(2)+'deg)'}
+window.addEventListener('scroll',()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{tk=false;const y=window.scrollY;if(y<window.innerHeight*1.2){py=y*0.08;ap()}})},{passive:true});
+if(fine){hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();ry=(((e.clientX-r.left)/r.width)-.5)*-14;rx=(((e.clientY-r.top)/r.height)-.5)*8;ap()});hero.addEventListener('pointerleave',()=>{ry=0;rx=0;ap()})}
 }
 }
 if(fine&&!reduce){
